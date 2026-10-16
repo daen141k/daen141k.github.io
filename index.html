@@ -3,147 +3,603 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>daen141kk</title>
+<meta name="description" content="daen141kk — личная страница с живым клеточным фоном, мини-терминалом и змейкой.">
+<meta name="theme-color" content="#000000">
+<meta property="og:type" content="website">
+<meta property="og:title" content="daen141kk">
+<meta property="og:description" content="Живой клеточный фон, терминал и змейка.">
+<meta property="og:url" content="https://daen141k.github.io/">
+<!-- TODO: <meta property="og:image" content="https://daen141k.github.io/preview.png"> (скриншот 1200x630) -->
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<title>daen141kk</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23000'/><rect x='8' y='8' width='16' height='16' fill='%2339ff88'/></svg>">
 <style>
+  :root { --cell: 20px; --acc: #ffffff; --glow: #ffffff40; --px: 0px; --py: 0px; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { height: 100%; overflow: hidden; }
+  html, body { height: 100%; overflow: hidden; touch-action: none; }
   body {
     background-color: #000;
-    font-family: "JetBrains Mono", "Cascadia Code", "Fira Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    font-variant-ligatures: none;
-    font-feature-settings: "calt" 0, "liga" 0;
-    -webkit-font-smoothing: antialiased;
+    background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px),
+                      radial-gradient(rgba(255,255,255,.16) 1.5px, transparent 2px);
+    background-size: var(--cell) var(--cell), calc(var(--cell) * 5) calc(var(--cell) * 5);
+    background-position: var(--px) var(--py), calc(var(--px) * -4) calc(var(--py) * -4);
+    color: #eaeaea;
+    font-family: "JetBrains Mono", "Fira Code", "SF Mono", Menlo, Consolas, "Courier New", monospace;
   }
   canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
   .center {
     position: fixed; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    pointer-events: none;
-    z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    pointer-events: none; transition: opacity .3s;
   }
   h1 {
-    position: relative;
-    font-size: clamp(28px, 7vw, 72px);
-    letter-spacing: .015em;
-    font-family: "JetBrains Mono", "Cascadia Code", "Fira Code", monospace;
-    font-weight: 700;
-    color: #eaeaea;
-    text-shadow: 0 0 22px rgba(220,226,235,.10);
-    white-space: nowrap;
-    line-height: 1.2;
-    background: none;
-    padding: 0;
+    font-weight: 700; font-size: clamp(28px, 7vw, 72px); letter-spacing: .04em;
+    padding: .5em 1.2em .2em;
+    background: radial-gradient(closest-side, #000 55%, rgba(0,0,0,0) 100%);
+    text-shadow: 0 0 18px var(--glow); white-space: nowrap; transition: opacity .5s;
   }
-  h1 .name { display: block; }
   h1 .cur {
-    position: absolute;
-    left: 100%;
-    bottom: .12em;
-    display: block;
-    width: .48em;
-    height: .075em;
-    margin-left: .13em;
-    background: #d9dee6;
-    animation: blink 1.1s steps(1) infinite;
-  }
-  .links {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(22px, 5vw, 48px);
-    margin-top: 26px;
-    padding: 8px 0;
-    background: none;
-    pointer-events: auto;
-  }
-  .links a {
-    color: #c4cbd5;
-    text-decoration: none;
-    font-family: "JetBrains Mono", "Cascadia Code", "Fira Code", monospace;
-    font-size: clamp(14px, 2.2vw, 20px);
-    font-weight: 500;
-    letter-spacing: .025em;
-    text-transform: none;
-    text-shadow: 0 0 12px rgba(220,226,235,.14);
-    transition: color .2s ease, text-shadow .2s ease, transform .2s ease;
-    outline-offset: 5px;
-  }
-  .links a:hover, .links a:focus-visible {
-    color: #ffffff;
-    text-shadow: 0 0 10px rgba(235,240,248,.45), 0 0 24px rgba(235,240,248,.2);
-    transform: translateY(-2px);
+    display: inline-block; width: .55em; height: .09em; background: var(--acc);
+    margin-left: .12em; vertical-align: baseline; animation: blink 1.1s steps(1) infinite;
   }
   @keyframes blink { 50% { opacity: 0; } }
+  #sub { color: #9a9a9a; font-size: clamp(13px, 2.4vw, 20px); min-height: 1.5em; padding: 0 1em; text-align: center; }
+  nav {
+    display: flex; gap: 1.4em; flex-wrap: wrap; justify-content: center;
+    margin-top: 1.2em; padding: .5em 1.2em; background: rgba(0,0,0,.75); pointer-events: auto;
+  }
+  nav a, nav button {
+    font: inherit; font-size: clamp(14px, 2.6vw, 18px); color: #bbb; background: none; border: 0;
+    text-decoration: none; cursor: pointer; transition: color .15s, text-shadow .15s;
+  }
+  nav a::before, nav button::before { content: "> "; color: var(--acc); }
+  nav a:hover, nav button:hover, nav a:focus-visible, nav button:focus-visible {
+    color: var(--acc); text-shadow: 0 0 10px var(--glow); outline: none;
+  }
+  #sub { pointer-events: auto; cursor: pointer; }
+  body.game .center { opacity: 0; visibility: hidden; }
+  @media (prefers-reduced-motion: reduce) { h1 .cur { animation: none; } }
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 <div class="center">
-  <h1><span class="name">daen141kk</span><span class="cur"></span></h1>
-  <nav class="links" aria-label="Ссылки">
-    <a href="https://steamcommunity.com/id/daen141kk/" target="_blank" rel="noopener noreferrer">Steam</a>
-    <a href="https://t.me/daen141kk" target="_blank" rel="noopener noreferrer">Telegram</a>
-  </nav>
+  <h1><span id="name">daen141kk</span><span class="cur"></span></h1>
+  <div id="sub"></div>
+  <nav id="nav"></nav>
 </div>
+<input id="kb" aria-label="ввод" autocomplete="off" autocapitalize="off" style="position:fixed;left:0;bottom:0;width:1px;height:1px;opacity:0;border:0">
+<noscript><p style="position:fixed;bottom:12px;left:12px;color:#888">Для анимации нужен JavaScript.</p></noscript>
 
 <script>
 (() => {
-  const canvas = document.getElementById('c');
-  const ctx = canvas.getContext('2d');
-  const glyphs = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン一二三四五六七八九十零月火水木金土日東京電脳未来影龍空光闇愛夢';
-  let fontSize = 30;
-  const getFontSize = () => Math.max(25, Math.min(38, Math.round(window.innerWidth / 42))); 
-  let W = 0, H = 0, dpr = 1, columns = 0, drops = [], speeds = [];
-  let lastFrame = 0;
+  const $ = id => document.getElementById(id);
+  const canvas = $('c'), ctx = canvas.getContext('2d');
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = window.innerWidth;
-    H = window.innerHeight;
-    fontSize = getFontSize();
-    canvas.width = Math.floor(W * dpr);
-    canvas.height = Math.floor(H * dpr);
-    canvas.style.width = W + 'px';
-    canvas.style.height = H + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    columns = Math.ceil(W / fontSize);
-    drops = Array.from({ length: columns }, () => Math.random() * (H / fontSize));
-    speeds = Array.from({ length: columns }, (_, i) => 0.22 + (i % 7) * 0.035 + Math.random() * 0.12);
+  /* ===== НАСТРОЙКИ: правь здесь ===== */
+  const LINKS = [
+    ['telegram', 'https://t.me/daen141kk'],
+    ['steam', 'https://steamcommunity.com/id/daen141kk']
+  ];
+  const PHRASES = ['нажми любую клавишу', '何かキーを押してください'];
+  const KATA = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+  const THEMES = {
+    matrix: ['#39ff88', '#4dd0ff', '#b57cff', '#ffb454'],
+    synth:  ['#ff4fd8', '#4df3ff', '#a56bff', '#ffd24d'],
+    mono:   ['#ffffff', '#bbbbbb', '#888888', '#dddddd'],
+    amber:  ['#ffb000', '#ff8c00', '#ffd060', '#ff6a00']
+  };
+
+  const rand = n => Math.floor(Math.random() * n);
+  const pick = a => a[rand(a.length)];
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const store = {
+    get: k => { try { return localStorage.getItem(k); } catch (e) {} },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+  const DIRS = [[1,0],[-1,0],[0,1],[0,-1]];
+  if (document.fonts) document.fonts.load('700 64px "JetBrains Mono"');
+
+  /* звук (по умолчанию выключен) */
+  let AC = null, soundOn = store.get('sound') === '1';
+  function tone(f, d = .06, type = 'square', v = .05, slide = 0) {
+    if (!soundOn) return;
+    try {
+      AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+      if (AC.state === 'suspended') AC.resume();
+      const o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime;
+      o.type = type; o.frequency.setValueAtTime(f, t);
+      if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, f + slide), t + d);
+      g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+      o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + d);
+    } catch (e) {}
+  }
+  function toggleSound(btn) {
+    soundOn = !soundOn; store.set('sound', soundOn ? '1' : '0');
+    btn.textContent = soundOn ? 'sound on' : 'sound off';
+    tone(660, .08, 'triangle', .06, 220);
   }
 
-  function frame(now = 0) {
-    const dt = Math.min(2, (now - (lastFrame || now)) / 16.67);
-    lastFrame = now;
-    // Мягкий шлейф вместо резкого мерцания и перегруженного фона.
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.16)';
-    ctx.fillRect(0, 0, W, H);
-    ctx.font = fontSize + 'px "JetBrains Mono", monospace';
-    ctx.textAlign = 'center';
+  /* спрайты свечения: рисуются один раз, дальше только drawImage */
+  const glowCache = {};
+  function glow(color) {
+    if (glowCache[color]) return glowCache[color];
+    const g = document.createElement('canvas'); g.width = g.height = C * 4;
+    const x = g.getContext('2d'), gr = x.createRadialGradient(C * 2, C * 2, 0, C * 2, C * 2, C * 2);
+    gr.addColorStop(0, color + '99'); gr.addColorStop(1, color + '00');
+    x.fillStyle = gr; x.fillRect(0, 0, C * 4, C * 4);
+    return (glowCache[color] = g);
+  }
 
-    for (let i = 0; i < drops.length; i++) {
-      const x = i * fontSize + fontSize / 2;
-      const y = drops[i] * fontSize;
-      const char = glyphs[(i * 13 + Math.floor(drops[i] * 3)) % glyphs.length];
-      // Сдержанная графитовая палитра; яркая головка появляется редко.
-      ctx.fillStyle = Math.random() > 0.997 ? '#d9dee6' : (i % 3 === 0 ? 'rgba(174,181,192,.48)' : 'rgba(113,121,133,.30)');
-      ctx.shadowBlur = 0;
-      ctx.fillText(char, x, y);
-      drops[i] += speeds[i] * dt;
-      if (y > H + fontSize && Math.random() > 0.985) {
-        drops[i] = -Math.random() * (H / fontSize * 0.35);
+  let C = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cell')) || 20;
+  let W, H, cols, rows, dpr, COLORS = THEMES.mono;
+  let crawlers = [], rain = [];
+  const trail = [], ptr = { x: -99, y: -99, active: false, down: false, touch: false, fx: .5, fy: .5 };
+  const par = { x: 0, y: 0, lx: 9, ly: 9 }, rootStyle = document.documentElement.style;
+  let tilt = 0;
+
+  /* ===== размеры ===== */
+  const crawlerTarget = () => clamp(Math.round(cols * rows / 350), 6, 18);
+  function resize() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cols = Math.ceil(W / C); rows = Math.ceil(H / C);
+    rain = Array.from({ length: clamp(Math.round(cols / 5), 5, 24) }, mkRain);
+    const base = crawlers.filter(c => !c.extra);
+    for (let i = base.length; i < crawlerTarget(); i++) crawlers.push(mkCrawler());
+    base.slice(crawlerTarget()).forEach(c => c.life = 0);
+  }
+
+  /* ===== тема ===== */
+  function setTheme(n) {
+    if (!THEMES[n]) return false;
+    COLORS = THEMES[n];
+    const st = document.documentElement.style;
+    st.setProperty('--acc', COLORS[0]); st.setProperty('--glow', COLORS[0] + '40');
+    crawlers.forEach(c => c.color = pick(COLORS)); rain.forEach(r => r.color = pick(COLORS));
+    store.set('theme', n);
+    return true;
+  }
+
+  function cycleTheme() {
+    const k = Object.keys(THEMES);
+    setTheme(k[(k.indexOf(store.get('theme') || 'mono') + 1) % k.length]);
+  }
+
+  function mkRain() {
+    return { x: rand(cols), y: -rand(H), sp: 40 + rand(70), len: 6 + rand(7), color: pick(COLORS),
+             ch: Array.from({ length: 14 }, () => pick(KATA)) };
+  }
+
+  /* ===== ползуны ===== */
+  function mkCrawler(x, y, extra) {
+    const d = pick(DIRS);
+    return {
+      x: x ?? rand(cols), y: y ?? rand(rows), dx: d[0], dy: d[1],
+      len: extra ? 6 + rand(8) : 8 + rand(18), body: [], color: pick(COLORS),
+      every: extra ? 40 + rand(30) : 70 + rand(90), t: 0,
+      life: extra ? 35 + rand(40) : 500 + rand(900), extra: !!extra, dead: false
+    };
+  }
+  function stepCrawler(c) {
+    if (c.life-- <= 0) {
+      c.body.pop();
+      if (!c.body.length) { if (c.extra) c.dead = true; else Object.assign(c, mkCrawler()); }
+      return;
+    }
+    if (ptr.active && !c.extra) {
+      const ddx = c.x - ptr.x, ddy = c.y - ptr.y;
+      if (Math.abs(ddx) < 7 && Math.abs(ddy) < 7 && Math.random() < (ptr.touch ? .3 : .6)) {
+        // зажатая кнопка притягивает, иначе отпугивает
+        const s = ptr.down ? -1 : 1;
+        if (Math.abs(ddx) > Math.abs(ddy)) { c.dx = s * (Math.sign(ddx) || 1); c.dy = 0; }
+        else { c.dx = 0; c.dy = s * (Math.sign(ddy) || 1); }
       }
     }
-    requestAnimationFrame(frame);
+    if (Math.random() < .18) {
+      if (Math.random() < .5) [c.dx, c.dy] = [-c.dy, c.dx]; else [c.dx, c.dy] = [c.dy, -c.dx];
+    }
+    c.x = (c.x + c.dx + cols) % cols;
+    c.y = (c.y + c.dy + rows) % rows;
+    c.body.unshift({ x: c.x, y: c.y, ch: pick(KATA) });
+    if (c.body.length > c.len) c.body.pop();
   }
 
+  /* ===== указатель ===== */
+  const cellOf = e => ({ x: Math.floor(e.clientX / C), y: Math.floor(e.clientY / C) });
+  let sx = 0, sy = 0, tiltAsked = false;
+  addEventListener('pointermove', e => {
+    const p = cellOf(e);
+    ptr.touch = e.pointerType === 'touch';
+    ptr.fx = e.clientX / W; ptr.fy = e.clientY / H;
+    if (p.x !== ptr.x || p.y !== ptr.y) {
+      ptr.x = p.x; ptr.y = p.y;
+      const v = Math.hypot(e.movementX || 0, e.movementY || 0);
+      trail.push({ x: p.x, y: p.y, life: 1, ch: pick(KATA + '0123456789'), color: COLORS[v > 40 ? 2 : v > 15 ? 1 : 0] }); // цвет следа зависит от скорости
+      if (trail.length > 60) trail.shift();
+    }
+    ptr.active = true;
+  });
+  document.documentElement.addEventListener('mouseleave', () => { ptr.active = false; });
+  const up = e => {
+    ptr.down = false;
+    if (e.pointerType === 'touch') ptr.active = false;
+    if (game.on) {
+      if (e.clientX > W - 56 && e.clientY < 56) return gStop();
+      const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) > 20)
+        Math.abs(dx) > Math.abs(dy) ? gDir(Math.sign(dx), 0) : gDir(0, Math.sign(dy));
+      else if (game.dead) gStart();
+    }
+  };
+  addEventListener('pointerup', up);
+  addEventListener('pointercancel', up);
+  addEventListener('pointerdown', e => {
+    sx = e.clientX; sy = e.clientY;
+    if (!tiltAsked && window.DeviceOrientationEvent && DeviceOrientationEvent.requestPermission) {
+      tiltAsked = true; DeviceOrientationEvent.requestPermission().catch(() => {});
+    }
+    if (game.on) return;
+    const p = cellOf(e);
+    ptr.x = p.x; ptr.y = p.y; ptr.active = true; ptr.down = true; ptr.touch = e.pointerType === 'touch';
+    tone(300, .06, 'triangle', .03, 200);
+    let extras = crawlers.filter(c => c.extra).length;
+    for (let i = 0; i < 4 && extras + i < 24; i++) {
+      const c = mkCrawler(p.x, p.y, true);
+      c.dx = DIRS[i][0]; c.dy = DIRS[i][1];
+      crawlers.push(c);
+    }
+  });
+  addEventListener('deviceorientation', e => { if (e.gamma != null) tilt = clamp(e.gamma / 30, -1, 1); });
+
+  /* ===== змейка 2.0 ===== */
+  const game = { on: false, dead: false, paused: false, started: false, body: [], prev: [], dir: [1, 0], q: [],
+                 food: null, bonus: null, particles: [], shake: 0, t: 0, speed: 140, score: 0,
+                 best: +store.get('best') || 0, gw: 0, gh: 0, ox: 0, oy: 0 };
+  function freeCell() {
+    let c;
+    do c = { x: rand(game.gw), y: rand(game.gh) };
+    while (game.body.some(s => s.x === c.x && s.y === c.y) || (game.food && game.food.x === c.x && game.food.y === c.y));
+    return c;
+  }
+  const gFood = () => { game.food = freeCell(); };
+  const gBonus = () => { game.bonus = Object.assign(freeCell(), { ttl: 60 }); };
+  function burst(c, color, n = 14) {
+    const x = (game.ox + c.x) * C + C / 2, y = (game.oy + c.y) * C + C / 2;
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * 6.283, v = 1 + Math.random() * 4;
+      game.particles.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, color });
+    }
+  }
+  function gStart() {
+    document.body.classList.add('game'); crumbleAll();
+    game.gw = clamp(cols - 4, 10, 30); game.gh = clamp(rows - 6, 8, 20);
+    game.ox = (cols - game.gw) >> 1; game.oy = (rows - game.gh) >> 1;
+    const cx = game.gw >> 1, cy = game.gh >> 1;
+    Object.assign(game, { on: true, dead: false, paused: false, started: false, score: 0, t: 0, dir: [1, 0], q: [],
+      bonus: null, food: null, particles: [], shake: 0, prev: [],
+      body: [{ x: cx, y: cy }, { x: cx - 1, y: cy }, { x: cx - 2, y: cy }] });
+    gFood();
+  }
+  function gStop() { game.on = false; document.body.classList.remove('game'); }
+  function gDir(dx, dy) {
+    if (game.dead) return gStart();
+    const last = game.q.length ? game.q[game.q.length - 1] : game.dir;
+    if (dx === -last[0] && dy === -last[1]) return;
+    if (game.q.length < 2 && !(dx === last[0] && dy === last[1])) game.q.push([dx, dy]);
+    game.started = true; game.paused = false;
+  }
+  function gStep() {
+    game.prev = game.body.map(s => ({ x: s.x, y: s.y }));
+    const h = game.body[0];
+    if (game.q.length) game.dir = game.q.shift();
+    const n = { x: h.x + game.dir[0], y: h.y + game.dir[1] };
+    const eat = n.x === game.food.x && n.y === game.food.y;
+    const eatB = game.bonus && n.x === game.bonus.x && n.y === game.bonus.y;
+    const grow = eat || eatB;
+    const body = grow ? game.body : game.body.slice(0, -1);
+    if (n.x < 0 || n.y < 0 || n.x >= game.gw || n.y >= game.gh || body.some(s => s.x === n.x && s.y === n.y)) {
+      game.dead = true; game.shake = 1; tone(220, .5, 'sawtooth', .07, -180);
+      game.body.forEach(s => burst(s, COLORS[3], 3));
+      if (game.score > game.best) { game.best = game.score; store.set('best', game.score); }
+      return;
+    }
+    game.body.unshift(n);
+    if (eat) { game.score++; tone(520, .09, 'square', .05, 320); burst(n, COLORS[1]); game.shake = .25; gFood(); if (game.score % 5 === 0) gBonus(); }
+    else if (eatB) { game.score += 3; tone(880, .18, 'triangle', .07, 600); burst(n, COLORS[3], 28); game.shake = .45; game.bonus = null; }
+    if (!grow) game.body.pop();
+    if (game.bonus && --game.bonus.ttl <= 0) game.bonus = null;
+  }
+  function drawGame(now) {
+    const ox = game.ox * C, oy = game.oy * C, aw = game.gw * C, ah = game.gh * C, A = COLORS[0];
+    ctx.save();
+    if (game.shake > 0) ctx.translate((Math.random() - .5) * 10 * game.shake, (Math.random() - .5) * 10 * game.shake);
+    ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(ox, oy, aw, ah);
+    ctx.strokeStyle = A; ctx.shadowColor = A; ctx.shadowBlur = 14; ctx.globalAlpha = .8; ctx.lineWidth = 2;
+    ctx.strokeRect(ox - 1, oy - 1, aw + 2, ah + 2);
+    ctx.lineWidth = 1;
+    // еда: пульсирует, от неё расходится кольцо
+    const f = game.food, pu = Math.sin(now / 180), r = (now / 700) % 1;
+    ctx.fillStyle = ctx.strokeStyle = COLORS[1]; ctx.shadowColor = COLORS[1];
+    ctx.globalAlpha = .8 + .2 * pu; ctx.fillRect(ox + f.x * C + 4, oy + f.y * C + 4, C - 8, C - 8);
+    ctx.globalAlpha = .5 * (1 - r); ctx.strokeRect(ox + f.x * C + 4 - r * 7, oy + f.y * C + 4 - r * 7, C - 8 + r * 14, C - 8 + r * 14);
+    // золотой бонус: исчезает по таймеру
+    if (game.bonus) {
+      const b = game.bonus; ctx.fillStyle = COLORS[3]; ctx.shadowColor = COLORS[3];
+      ctx.globalAlpha = .6 + .4 * Math.sin(now / 70); ctx.fillRect(ox + b.x * C + 2, oy + b.y * C + 2, C - 4, C - 4);
+      ctx.shadowBlur = 0; ctx.globalAlpha = .9; ctx.fillRect(ox, oy + ah + 5, aw * b.ttl / 60, 3);
+    }
+    // змейка: плавное движение между клетками, свечение, глаза
+    const live = game.started && !game.dead && !game.paused, k = live ? clamp(game.t / game.speed, 0, 1) : 1;
+    const n = game.body.length, col = game.dead ? COLORS[3] : A;
+    for (let i = n - 1; i >= 0; i--) {
+      const s = game.body[i], q = game.prev[i] || s, head = i === 0;
+      const x = ox + (q.x + (s.x - q.x) * k) * C, y = oy + (q.y + (s.y - q.y) * k) * C;
+      const m = head ? 1 : 2 + Math.min(i * .12, 3);
+      ctx.shadowColor = col; ctx.shadowBlur = head ? 18 : 8;
+      ctx.fillStyle = head ? '#fff' : col;
+      ctx.globalAlpha = (head ? 1 : Math.max(.3, 1 - i / (n + 8))) * (game.dead ? .5 : 1);
+      ctx.fillRect(x + m, y + m, C - 2 * m, C - 2 * m);
+      if (head) {
+        const d = game.dir; ctx.shadowBlur = 0; ctx.fillStyle = '#000'; ctx.globalAlpha = 1;
+        for (const sg of [-1, 1]) ctx.fillRect(x + C / 2 + d[0] * 4 - d[1] * 4 * sg - 1.5, y + C / 2 + d[1] * 4 + d[0] * 4 * sg - 1.5, 3, 3);
+      }
+    }
+    for (const p of game.particles) {
+      ctx.fillStyle = p.color; ctx.shadowColor = p.color; ctx.shadowBlur = 6; ctx.globalAlpha = Math.max(0, p.life);
+      ctx.fillRect(p.x - 2, p.y - 2, 4, 4);
+    }
+    ctx.restore();
+    ctx.globalAlpha = 1; ctx.fillStyle = A; ctx.textAlign = 'center'; ctx.font = '15px "JetBrains Mono", monospace';
+    ctx.fillText('счёт ' + game.score + '   рекорд ' + game.best, W / 2, oy - 12);
+    ctx.globalAlpha = .6;
+    ctx.fillText('стрелки / WASD / ЦФЫВ / свайп   пробел — пауза   esc — выход', W / 2, oy + ah + 28);
+    ctx.globalAlpha = 1; ctx.font = '18px "JetBrains Mono", monospace';
+    const msg = game.dead ? 'конец. любая клавиша или тап — заново' : game.paused ? 'пауза' : !game.started ? 'нажми стрелку или свайпни' : '';
+    if (msg) ctx.fillText(msg, W / 2, oy + ah / 2);
+    ctx.font = '22px "JetBrains Mono", monospace'; ctx.textAlign = 'end'; ctx.fillText('×', W - 20, 34); ctx.textAlign = 'start';
+  }
+
+/* ===== набор: буква выскакивает с отскоком там, где курсор, и рассыпается искрами ===== */
+  let blocks = [], rings = [], caret = null;
+  const gc = document.createElement('canvas'); gc.width = 48; gc.height = 72;
+  const gctx = gc.getContext('2d', { willReadFrequently: true });
+  function glyph(ch) { // символ -> сетка 6x9 клеток
+    gctx.clearRect(0, 0, 48, 72); gctx.fillStyle = '#fff'; gctx.textAlign = 'center'; gctx.textBaseline = 'middle';
+    gctx.font = 'bold 64px "JetBrains Mono", Menlo, Consolas, monospace'; gctx.fillText(ch, 24, 38);
+    const d = gctx.getImageData(0, 0, 48, 72).data, out = [];
+    for (let gy = 0; gy < 9; gy++) for (let g = 0; g < 6; g++) {
+      let n = 0;
+      for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) if (d[((gy * 8 + y) * 48 + g * 8 + x) * 4 + 3] > 128) n++;
+      if (n > 22) out.push([g, gy]);
+    }
+    return out;
+  }
+  const mkBlock = (tx, ty, sz, x, y, life, delay = 0, flash = 0) =>
+    ({ tx, ty, sz, x, y, vx: 0, vy: 0, mode: 'pop', color: pick(COLORS), flash, age: 0, life, delay });
+  function dissolve(b, delay = 0) {
+    if (b.mode === 'out') return;
+    b.mode = 'out'; b.age = -delay; b.vx = (Math.random() - .5) * 60; b.vy = -(40 + Math.random() * 90);
+  }
+  const crumbleAll = () => blocks.forEach(b => dissolve(b, rand(300)));
+  function addChar(ch) {
+    const t = performance.now();
+    if (ch === ' ') { if (caret) { caret.cx += 4; caret.t = t; } return; }
+    tone(500 + rand(500), .04, 'square', .03);
+    let cx, cy;
+    if (caret && t - caret.t < 1500) { cx = caret.cx; cy = caret.cy; if (cx > cols - 8) { cx = caret.x0; cy += 10; } }
+    else { // новая «строка»: у курсора мыши или в случайном месте
+      if (ptr.active) { cx = ptr.x - 3; cy = ptr.y - 4; }
+      else { cx = 2 + rand(Math.max(1, cols - 10)); cy = 2 + rand(Math.max(1, rows - 12)); }
+      cx = clamp(cx, 1, Math.max(1, cols - 7));
+      caret = { x0: cx };
+    }
+    cx = clamp(cx, 1, Math.max(1, cols - 7)); cy = clamp(cy, 1, Math.max(1, rows - 10));
+    Object.assign(caret, { cx: cx + 7, cy, t });
+    const mx = (cx + 3) * C, my = (cy + 4.5) * C;
+    for (const [g, gy] of glyph(ch))
+      blocks.push(mkBlock((cx + g) * C, (cy + gy) * C, C, mx + rand(12) - 6, my + rand(12) - 6, 2200 + rand(700), 0, 1));
+    rings.push({ x: mx, y: my, r: 0, life: 1 });
+    if (blocks.length > 700) blocks.slice(0, 120).forEach(b => dissolve(b));
+  }
+  function introName() { // заставка: имя собирается из блоков, летящих с краёв
+    const h = nm.parentElement, fs = parseFloat(getComputedStyle(h).fontSize);
+    const sz = Math.min(C, fs * .0914), r = nm.getBoundingClientRect();
+    const x0 = W / 2 - 62 * sz / 2, y0 = r.top + r.height / 2 - 4.5 * sz;
+    [...'daen141kk'].forEach((ch, i) => glyph(ch).forEach(([g, gy]) => {
+      const side = rand(4);
+      blocks.push(mkBlock(x0 + (i * 7 + g) * sz, y0 + gy * sz, sz,
+        side < 2 ? rand(W) : (side === 2 ? -30 : W + 30), side < 2 ? (side === 0 ? -30 : H + 30) : rand(H),
+        1700 + rand(300), rand(400)));
+    }));
+  }
+  function updBlocks(dt) {
+    const s = Math.min(dt, 50) / 1000;
+    for (const b of blocks) {
+      if (b.mode === 'pop') {
+        if (b.delay > 0) { b.delay -= dt; continue; }
+        b.age += dt;
+        b.vx += ((b.tx - b.x) * 180 - b.vx * 9) * s; b.vy += ((b.ty - b.y) * 180 - b.vy * 9) * s; // пружина с отскоком
+        b.x += b.vx * s; b.y += b.vy * s;
+        if (b.age > b.life) dissolve(b);
+      } else {
+        b.age += dt;
+        if (b.age > 0) { b.x += b.vx * s; b.y += b.vy * s; if (b.age > 900) b.done = true; }
+      }
+      b.flash = Math.max(0, b.flash - dt / 250);
+    }
+    blocks = blocks.filter(b => !b.done);
+    for (const r of rings) { r.r += 320 * s; r.life -= dt / 650; }
+    rings = rings.filter(r => r.life > 0);
+  }
+  function drawBlocks(now) {
+    const glowOn = blocks.length < 350;
+    ctx.strokeStyle = COLORS[0]; ctx.lineWidth = 2;
+    for (const r of rings) { ctx.globalAlpha = .5 * r.life; ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, 6.283); ctx.stroke(); }
+    ctx.lineWidth = 1;
+    for (const b of blocks) {
+      if (b.mode === 'pop' && b.delay > 0 && (b.x < 0 || b.x > W || b.y < 0 || b.y > H)) continue;
+      const col = b.mode === 'pop' ? COLORS[Math.floor(b.tx / C / 2 + now / 160) % COLORS.length] : b.color;
+      const pad = Math.max(.5, b.sz * .08);
+      ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = glowOn ? 10 : 0;
+      ctx.globalAlpha = b.mode === 'out' ? Math.max(0, 1 - Math.max(0, b.age) / 900) : .95;
+      ctx.fillRect(b.x + pad, b.y + pad, b.sz - 2 * pad, b.sz - 2 * pad);
+      if (b.flash > 0) { ctx.shadowBlur = 0; ctx.fillStyle = '#fff'; ctx.globalAlpha = b.flash; ctx.fillRect(b.x, b.y, b.sz, b.sz); }
+    }
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+  }
+
+  const KONAMI = 'ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,b,a'.split(',');
+  let kp = 0;
+  addEventListener('keydown', e => {
+    if (e.key === KONAMI[kp]) { if (++kp === KONAMI.length) { kp = 0; gStart(); return; } }
+    else kp = e.key === KONAMI[0] ? 1 : 0;
+    if (game.on) {
+      const k = e.key.length > 1 ? e.key : e.key.toLowerCase();
+      const m = { ArrowUp: [0,-1], w: [0,-1], ArrowDown: [0,1], s: [0,1], ArrowLeft: [-1,0], a: [-1,0], ArrowRight: [1,0], d: [1,0], 'ц': [0,-1], 'ы': [0,1], 'ф': [-1,0], 'в': [1,0] }[k]
+        || ({ KeyW: [0,-1], KeyS: [0,1], KeyA: [-1,0], KeyD: [1,0] })[e.code];
+      if (k === 'Escape') gStop();
+      else if (k === ' ') { game.paused = !game.paused; e.preventDefault(); }
+      else if (m) { gDir(m[0], m[1]); e.preventDefault(); }
+      else if (game.dead) gStart();
+      return;
+    }
+    if (e.target.id === 'kb' || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === 'Enter') crumbleAll();
+    else if (e.key === 'Backspace') crumbleAll();
+    else if (e.key.length === 1) addChar(e.key.toUpperCase());
+  });
+
+  /* ===== навигация и печать ===== */
+  const kb = $('kb');
+  $('sub').addEventListener('click', () => kb.focus());
+  kb.addEventListener('input', () => { for (const ch of kb.value) addChar(ch.toUpperCase()); kb.value = ''; });
+  kb.addEventListener('keydown', e => {
+    if (e.key === 'Enter') crumbleAll();
+    else if (e.key === 'Backspace') crumbleAll();
+  });
+  const nav = $('nav');
+  LINKS.forEach(([n, u]) => {
+    const a = document.createElement('a'); a.href = u; a.textContent = n;
+    if (!u.startsWith('mailto:')) { a.target = '_blank'; a.rel = 'noopener'; }
+    nav.append(a);
+  });
+  [['snake', gStart], ['theme', cycleTheme], [soundOn ? 'sound on' : 'sound off', e => toggleSound(e.currentTarget)]].forEach(([n, f]) => {
+    const b = document.createElement('button'); b.textContent = n; b.onclick = f; nav.append(b);
+  });
+
+  const nm = $('name'), sub = $('sub'), sleep = ms => new Promise(r => setTimeout(r, ms));
+  (async () => {
+    if (RM) { sub.textContent = PHRASES[0]; return; }
+    await Promise.race([document.fonts ? document.fonts.load('700 64px "JetBrains Mono"') : 0, sleep(500)]);
+    nm.parentElement.style.opacity = 0; introName();
+    await sleep(1900);
+    nm.parentElement.style.opacity = 1;
+    for (let i = 0; ; i = (i + 1) % PHRASES.length) {
+      const p = PHRASES[i];
+      for (let k = 1; k <= p.length; k++) { sub.textContent = p.slice(0, k); await sleep(45); }
+      await sleep(1800);
+      for (let k = p.length; k >= 0; k--) { sub.textContent = p.slice(0, k); await sleep(22); }
+      await sleep(300);
+    }
+  })();
+  if (!RM) setInterval(() => { document.title = document.title.endsWith('_') ? 'daen141kk' : 'daen141kk_'; }, 700);
+
+  /* ===== главный цикл ===== */
   resize();
-  window.addEventListener('resize', resize);
-  ctx.fillStyle = '#000';
-  ctx.fillRect(0, 0, W, H);
+  addEventListener('resize', resize);
+  setTheme(store.get('theme') in THEMES ? store.get('theme') : 'mono');
+
+  let last = performance.now();
+  function frame(now) {
+    const real = Math.min(now - last, 100), dt = real * (RM ? .25 : 1);
+    last = now;
+
+    for (const c of crawlers) { c.t += dt; while (c.t >= c.every) { c.t -= c.every; stepCrawler(c); } }
+    crawlers = crawlers.filter(c => !c.dead);
+    for (const t of trail) t.life -= dt / 700;
+    while (trail.length && trail[0].life <= 0) trail.shift();
+    if (game.on && game.started && !game.dead && !game.paused) {
+      game.t += real;
+      game.speed = 140 - Math.min(game.score * 3, 70);
+      while (game.t >= game.speed && !game.dead) { game.t -= game.speed; gStep(); }
+    }
+    if (game.on) {
+      for (const p of game.particles) { p.x += p.vx * real / 16; p.y += p.vy * real / 16; p.vx *= .96; p.vy *= .96; p.life -= real / 700; }
+      game.particles = game.particles.filter(p => p.life > 0);
+      game.shake = Math.max(0, game.shake - real / 400);
+    }
+    for (const r of rain) {
+      r.y += r.sp * dt / 1000;
+      if (r.y - r.len * C > H) Object.assign(r, mkRain());
+    }
+    updBlocks(dt, now);
+    if (!RM) { // параллакс фона
+      const tx = ptr.active ? ptr.fx - .5 : tilt * .5, ty = ptr.active ? ptr.fy - .5 : 0;
+      par.x += (tx - par.x) * .06; par.y += (ty - par.y) * .06;
+      if (Math.abs(par.x - par.lx) + Math.abs(par.y - par.ly) > .002) {
+        par.lx = par.x; par.ly = par.y;
+        rootStyle.setProperty('--px', (par.x * -6).toFixed(2) + 'px');
+        rootStyle.setProperty('--py', (par.y * -6).toFixed(2) + 'px');
+      }
+    }
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.lineWidth = 1;
+    ctx.font = (C - 4) + 'px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (const r of rain) {
+      ctx.fillStyle = r.color;
+      for (let j = 0; j < r.len; j++) {
+        const y = r.y - j * C;
+        if (y < -C || y > H + C) continue;
+        if (Math.random() < .03) r.ch[j] = pick(KATA);
+        ctx.globalAlpha = j === 0 ? .28 : .04 + .12 * (1 - j / r.len);
+        ctx.fillText(r.ch[j], r.x * C + C / 2, Math.round(y / C) * C + C / 2);
+      }
+    }
+    ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+
+    // след курсора из символов
+    ctx.font = (C - 6) + 'px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (const t of trail) {
+      ctx.fillStyle = t.color;
+      ctx.globalAlpha = .08 * t.life; ctx.fillRect(t.x * C + 2, t.y * C + 2, C - 4, C - 4);
+      ctx.globalAlpha = .95 * t.life; ctx.fillText(t.ch, t.x * C + C / 2, t.y * C + C / 2 + 1);
+    }
+    ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+    // ползуны
+    ctx.font = (C - 7) + 'px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (const c of crawlers) {
+      const gl = glow(c.color);
+      c.body.forEach((seg, i) => {
+        const cx = seg.x * C + C / 2, cy = seg.y * C + C / 2;
+        if (i < 4) { // свечение вокруг головы
+          ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = .7 * (1 - i / 4);
+          ctx.drawImage(gl, cx - C * 2, cy - C * 2);
+          ctx.globalCompositeOperation = 'source-over';
+        }
+        if (i === 0) { // голова: светлый блок с символом
+          ctx.globalAlpha = .95; ctx.fillStyle = c.color; ctx.fillRect(seg.x * C + 3, seg.y * C + 3, C - 6, C - 6);
+          ctx.fillStyle = '#000'; ctx.globalAlpha = 1; ctx.fillText(seg.ch, cx, cy + 1);
+        } else { // хвост: мерцающая катакана, как в матрице
+          if (Math.random() < .02) seg.ch = pick(KATA);
+          ctx.fillStyle = c.color; ctx.globalAlpha = .12 + .7 * (1 - i / c.len);
+          ctx.fillText(seg.ch, cx, cy + 1);
+        }
+      });
+    }
+    ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+    drawBlocks(now);
+    if (game.on) drawGame(now);
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
   requestAnimationFrame(frame);
 })();
 </script>
