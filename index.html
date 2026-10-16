@@ -10,7 +10,6 @@
 <meta property="og:title" content="daen141kk">
 <meta property="og:description" content="Живой клеточный фон, терминал и змейка.">
 <meta property="og:url" content="https://daen141k.github.io/">
-<!-- TODO: <meta property="og:image" content="https://daen141k.github.io/preview.png"> (скриншот 1200x630) -->
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,7 +66,7 @@
 <body>
 <canvas id="c"></canvas>
 <div class="center">
-  <h1><span id="name">daen141kk</span><span class="cur"></span></h1>
+  <h1><span id="name"></span><span class="cur"></span></h1>
   <div id="sub"></div>
   <nav id="nav"></nav>
 </div>
@@ -80,12 +79,17 @@
   const canvas = $('c'), ctx = canvas.getContext('2d');
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ===== НАСТРОЙКИ: правь здесь ===== */
+  /* ===== НАСТРОЙКИ ===== */
   const LINKS = [
     ['telegram', 'https://t.me/daen141kk'],
     ['steam', 'https://steamcommunity.com/id/daen141kk']
   ];
-  const PHRASES = ['нажми любую клавишу', '何かキーを押してください'];
+  const PHRASES = [
+    'нажми любую клавишу', 
+    '何かキーを押してください', 
+    'введи команду (steam, snake...)', 
+    'コマンドを入力してください (steam, snake...)'
+  ];
   const KATA = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
   const THEMES = {
     matrix: ['#39ff88', '#4dd0ff', '#b57cff', '#ffb454'],
@@ -104,7 +108,6 @@
   const DIRS = [[1,0],[-1,0],[0,1],[0,-1]];
   if (document.fonts) document.fonts.load('700 64px "JetBrains Mono"');
 
-  /* звук (по умолчанию выключен) */
   let AC = null, soundOn = store.get('sound') === '1';
   function tone(f, d = .06, type = 'square', v = .05, slide = 0) {
     if (!soundOn) return;
@@ -124,7 +127,6 @@
     tone(660, .08, 'triangle', .06, 220);
   }
 
-  /* спрайты свечения: рисуются один раз, дальше только drawImage */
   const glowCache = {};
   function glow(color) {
     if (glowCache[color]) return glowCache[color];
@@ -142,7 +144,6 @@
   const par = { x: 0, y: 0, lx: 9, ly: 9 }, rootStyle = document.documentElement.style;
   let tilt = 0;
 
-  /* ===== размеры ===== */
   const crawlerTarget = () => clamp(Math.round(cols * rows / 350), 6, 18);
   function resize() {
     dpr = Math.min(devicePixelRatio || 1, 2);
@@ -156,7 +157,6 @@
     base.slice(crawlerTarget()).forEach(c => c.life = 0);
   }
 
-  /* ===== тема ===== */
   function setTheme(n) {
     if (!THEMES[n]) return false;
     COLORS = THEMES[n];
@@ -177,7 +177,6 @@
              ch: Array.from({ length: 14 }, () => pick(KATA)) };
   }
 
-  /* ===== ползуны ===== */
   function mkCrawler(x, y, extra) {
     const d = pick(DIRS);
     return {
@@ -196,7 +195,6 @@
     if (ptr.active && !c.extra) {
       const ddx = c.x - ptr.x, ddy = c.y - ptr.y;
       if (Math.abs(ddx) < 7 && Math.abs(ddy) < 7 && Math.random() < (ptr.touch ? .3 : .6)) {
-        // зажатая кнопка притягивает, иначе отпугивает
         const s = ptr.down ? -1 : 1;
         if (Math.abs(ddx) > Math.abs(ddy)) { c.dx = s * (Math.sign(ddx) || 1); c.dy = 0; }
         else { c.dx = 0; c.dy = s * (Math.sign(ddy) || 1); }
@@ -211,7 +209,6 @@
     if (c.body.length > c.len) c.body.pop();
   }
 
-  /* ===== указатель ===== */
   const cellOf = e => ({ x: Math.floor(e.clientX / C), y: Math.floor(e.clientY / C) });
   let sx = 0, sy = 0, tiltAsked = false;
   addEventListener('pointermove', e => {
@@ -221,7 +218,7 @@
     if (p.x !== ptr.x || p.y !== ptr.y) {
       ptr.x = p.x; ptr.y = p.y;
       const v = Math.hypot(e.movementX || 0, e.movementY || 0);
-      trail.push({ x: p.x, y: p.y, life: 1, ch: pick(KATA + '0123456789'), color: COLORS[v > 40 ? 2 : v > 15 ? 1 : 0] }); // цвет следа зависит от скорости
+      trail.push({ x: p.x, y: p.y, life: 1, ch: pick(KATA + '0123456789'), color: COLORS[v > 40 ? 2 : v > 15 ? 1 : 0] });
       if (trail.length > 60) trail.shift();
     }
     ptr.active = true;
@@ -258,7 +255,7 @@
   });
   addEventListener('deviceorientation', e => { if (e.gamma != null) tilt = clamp(e.gamma / 30, -1, 1); });
 
-  /* ===== змейка 2.0 ===== */
+  /* ===== Змейка ===== */
   const game = { on: false, dead: false, paused: false, started: false, body: [], prev: [], dir: [1, 0], q: [],
                  food: null, bonus: null, particles: [], shake: 0, t: 0, speed: 140, score: 0,
                  best: +store.get('best') || 0, gw: 0, gh: 0, ox: 0, oy: 0 };
@@ -278,7 +275,7 @@
     }
   }
   function gStart() {
-    document.body.classList.add('game'); crumbleAll();
+    document.body.classList.add('game');
     game.gw = clamp(cols - 4, 10, 30); game.gh = clamp(rows - 6, 8, 20);
     game.ox = (cols - game.gw) >> 1; game.oy = (rows - game.gh) >> 1;
     const cx = game.gw >> 1, cy = game.gh >> 1;
@@ -324,18 +321,15 @@
     ctx.strokeStyle = A; ctx.shadowColor = A; ctx.shadowBlur = 14; ctx.globalAlpha = .8; ctx.lineWidth = 2;
     ctx.strokeRect(ox - 1, oy - 1, aw + 2, ah + 2);
     ctx.lineWidth = 1;
-    // еда: пульсирует, от неё расходится кольцо
     const f = game.food, pu = Math.sin(now / 180), r = (now / 700) % 1;
     ctx.fillStyle = ctx.strokeStyle = COLORS[1]; ctx.shadowColor = COLORS[1];
     ctx.globalAlpha = .8 + .2 * pu; ctx.fillRect(ox + f.x * C + 4, oy + f.y * C + 4, C - 8, C - 8);
     ctx.globalAlpha = .5 * (1 - r); ctx.strokeRect(ox + f.x * C + 4 - r * 7, oy + f.y * C + 4 - r * 7, C - 8 + r * 14, C - 8 + r * 14);
-    // золотой бонус: исчезает по таймеру
     if (game.bonus) {
       const b = game.bonus; ctx.fillStyle = COLORS[3]; ctx.shadowColor = COLORS[3];
       ctx.globalAlpha = .6 + .4 * Math.sin(now / 70); ctx.fillRect(ox + b.x * C + 2, oy + b.y * C + 2, C - 4, C - 4);
       ctx.shadowBlur = 0; ctx.globalAlpha = .9; ctx.fillRect(ox, oy + ah + 5, aw * b.ttl / 60, 3);
     }
-    // змейка: плавное движение между клетками, свечение, глаза
     const live = game.started && !game.dead && !game.paused, k = live ? clamp(game.t / game.speed, 0, 1) : 1;
     const n = game.body.length, col = game.dead ? COLORS[3] : A;
     for (let i = n - 1; i >= 0; i--) {
@@ -366,93 +360,93 @@
     ctx.font = '22px "JetBrains Mono", monospace'; ctx.textAlign = 'end'; ctx.fillText('×', W - 20, 34); ctx.textAlign = 'start';
   }
 
-/* ===== набор: буква выскакивает с отскоком там, где курсор, и рассыпается искрами ===== */
-  let blocks = [], rings = [], caret = null;
-  const gc = document.createElement('canvas'); gc.width = 48; gc.height = 72;
-  const gctx = gc.getContext('2d', { willReadFrequently: true });
-  function glyph(ch) { // символ -> сетка 6x9 клеток
-    gctx.clearRect(0, 0, 48, 72); gctx.fillStyle = '#fff'; gctx.textAlign = 'center'; gctx.textBaseline = 'middle';
-    gctx.font = 'bold 64px "JetBrains Mono", Menlo, Consolas, monospace'; gctx.fillText(ch, 24, 38);
-    const d = gctx.getImageData(0, 0, 48, 72).data, out = [];
-    for (let gy = 0; gy < 9; gy++) for (let g = 0; g < 6; g++) {
-      let n = 0;
-      for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) if (d[((gy * 8 + y) * 48 + g * 8 + x) * 4 + 3] > 128) n++;
-      if (n > 22) out.push([g, gy]);
+  /* ===== Ввод текста НАД ником (чистый, красивый и читаемый шрифт без багов) ===== */
+  let typedBuffer = '';
+  let activeChars = [], rings = [];
+
+  function handleCommand(cmd) {
+    const c = cmd.trim().toLowerCase();
+    if (!c) return;
+
+    if (c === 'snake') {
+      gStart();
+    } else if (c === 'theme') {
+      cycleTheme();
+    } else if (c === 'sound on' || c === 'sound off' || c === 'sound') {
+      const soundBtn = Array.from(nav.querySelectorAll('button')).find(b => b.textContent.includes('sound'));
+      if (soundBtn) soundBtn.click();
+    } else if (c === 'telegram') {
+      window.open('https://t.me/daen141kk', '_blank');
+    } else if (c === 'steam') {
+      window.open('https://steamcommunity.com/id/daen141kk', '_blank');
     }
-    return out;
+    setTimeout(() => {
+      activeChars.forEach(ch => ch.out = true);
+      typedBuffer = '';
+    }, 400);
   }
-  const mkBlock = (tx, ty, sz, x, y, life, delay = 0, flash = 0) =>
-    ({ tx, ty, sz, x, y, vx: 0, vy: 0, mode: 'pop', color: pick(COLORS), flash, age: 0, life, delay });
-  function dissolve(b, delay = 0) {
-    if (b.mode === 'out') return;
-    b.mode = 'out'; b.age = -delay; b.vx = (Math.random() - .5) * 60; b.vy = -(40 + Math.random() * 90);
-  }
-  const crumbleAll = () => blocks.forEach(b => dissolve(b, rand(300)));
+
   function addChar(ch) {
-    const t = performance.now();
-    if (ch === ' ') { if (caret) { caret.cx += 4; caret.t = t; } return; }
-    tone(500 + rand(500), .04, 'square', .03);
-    let cx, cy;
-    if (caret && t - caret.t < 1500) { cx = caret.cx; cy = caret.cy; if (cx > cols - 8) { cx = caret.x0; cy += 10; } }
-    else { // новая «строка»: у курсора мыши или в случайном месте
-      if (ptr.active) { cx = ptr.x - 3; cy = ptr.y - 4; }
-      else { cx = 2 + rand(Math.max(1, cols - 10)); cy = 2 + rand(Math.max(1, rows - 12)); }
-      cx = clamp(cx, 1, Math.max(1, cols - 7));
-      caret = { x0: cx };
+    tone(520, .04, 'square', .04, 100);
+    typedBuffer += ch;
+    
+    if (typedBuffer.length > 20) {
+      typedBuffer = typedBuffer.slice(1);
+      activeChars.shift();
     }
-    cx = clamp(cx, 1, Math.max(1, cols - 7)); cy = clamp(cy, 1, Math.max(1, rows - 10));
-    Object.assign(caret, { cx: cx + 7, cy, t });
-    const mx = (cx + 3) * C, my = (cy + 4.5) * C;
-    for (const [g, gy] of glyph(ch))
-      blocks.push(mkBlock((cx + g) * C, (cy + gy) * C, C, mx + rand(12) - 6, my + rand(12) - 6, 2200 + rand(700), 0, 1));
-    rings.push({ x: mx, y: my, r: 0, life: 1 });
-    if (blocks.length > 700) blocks.slice(0, 120).forEach(b => dissolve(b));
+
+    activeChars.push({ ch, life: 1, out: false, age: 0 });
+    rings.push({ x: W / 2, y: H / 2 - 40, r: 0, life: 1 });
+
+    if (activeChars.length > 30) activeChars.shift();
   }
-  function introName() { // заставка: имя собирается из блоков, летящих с краёв
-    const h = nm.parentElement, fs = parseFloat(getComputedStyle(h).fontSize);
-    const sz = Math.min(C, fs * .0914), r = nm.getBoundingClientRect();
-    const x0 = W / 2 - 62 * sz / 2, y0 = r.top + r.height / 2 - 4.5 * sz;
-    [...'daen141kk'].forEach((ch, i) => glyph(ch).forEach(([g, gy]) => {
-      const side = rand(4);
-      blocks.push(mkBlock(x0 + (i * 7 + g) * sz, y0 + gy * sz, sz,
-        side < 2 ? rand(W) : (side === 2 ? -30 : W + 30), side < 2 ? (side === 0 ? -30 : H + 30) : rand(H),
-        1700 + rand(300), rand(400)));
-    }));
+
+  function backspaceChar() {
+    if (typedBuffer.length === 0) return;
+    typedBuffer = typedBuffer.slice(0, -1);
+    if (activeChars.length > 0) activeChars.pop();
   }
-  function updBlocks(dt) {
+
+  function updChars(dt) {
     const s = Math.min(dt, 50) / 1000;
-    for (const b of blocks) {
-      if (b.mode === 'pop') {
-        if (b.delay > 0) { b.delay -= dt; continue; }
-        b.age += dt;
-        b.vx += ((b.tx - b.x) * 180 - b.vx * 9) * s; b.vy += ((b.ty - b.y) * 180 - b.vy * 9) * s; // пружина с отскоком
-        b.x += b.vx * s; b.y += b.vy * s;
-        if (b.age > b.life) dissolve(b);
-      } else {
-        b.age += dt;
-        if (b.age > 0) { b.x += b.vx * s; b.y += b.vy * s; if (b.age > 900) b.done = true; }
-      }
-      b.flash = Math.max(0, b.flash - dt / 250);
+    for (const ac of activeChars) {
+      ac.age += dt;
+      if (ac.out) ac.life -= dt / 400;
     }
-    blocks = blocks.filter(b => !b.done);
-    for (const r of rings) { r.r += 320 * s; r.life -= dt / 650; }
+    activeChars = activeChars.filter(ac => ac.life > 0);
+    for (const r of rings) { r.r += 250 * s; r.life -= dt / 500; }
     rings = rings.filter(r => r.life > 0);
   }
-  function drawBlocks(now) {
-    const glowOn = blocks.length < 350;
+
+  function drawChars() {
+    if (typedBuffer.length === 0 && rings.length === 0) return;
+    
+    ctx.save();
     ctx.strokeStyle = COLORS[0]; ctx.lineWidth = 2;
-    for (const r of rings) { ctx.globalAlpha = .5 * r.life; ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, 6.283); ctx.stroke(); }
-    ctx.lineWidth = 1;
-    for (const b of blocks) {
-      if (b.mode === 'pop' && b.delay > 0 && (b.x < 0 || b.x > W || b.y < 0 || b.y > H)) continue;
-      const col = b.mode === 'pop' ? COLORS[Math.floor(b.tx / C / 2 + now / 160) % COLORS.length] : b.color;
-      const pad = Math.max(.5, b.sz * .08);
-      ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = glowOn ? 10 : 0;
-      ctx.globalAlpha = b.mode === 'out' ? Math.max(0, 1 - Math.max(0, b.age) / 900) : .95;
-      ctx.fillRect(b.x + pad, b.y + pad, b.sz - 2 * pad, b.sz - 2 * pad);
-      if (b.flash > 0) { ctx.shadowBlur = 0; ctx.fillStyle = '#fff'; ctx.globalAlpha = b.flash; ctx.fillRect(b.x, b.y, b.sz, b.sz); }
+    for (const r of rings) { 
+      ctx.globalAlpha = .4 * r.life; 
+      ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, 6.283); ctx.stroke(); 
     }
-    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+
+    // Рисуем красивый векторный шрифт по центру НАД ником
+    const h1Elem = $('name').parentElement;
+    const h1Rect = h1Elem.getBoundingClientRect();
+    const yPos = h1Rect.top - 20;
+
+    ctx.font = 'bold 28px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+
+    const textToDraw = typedBuffer;
+    const col = COLORS[0];
+
+    ctx.shadowColor = col;
+    ctx.shadowBlur = 12;
+    ctx.fillStyle = col;
+    ctx.globalAlpha = 0.95;
+
+    ctx.fillText(textToDraw, W / 2, yPos);
+    ctx.restore();
   }
 
   const KONAMI = 'ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,b,a'.split(',');
@@ -460,6 +454,7 @@
   addEventListener('keydown', e => {
     if (e.key === KONAMI[kp]) { if (++kp === KONAMI.length) { kp = 0; gStart(); return; } }
     else kp = e.key === KONAMI[0] ? 1 : 0;
+    
     if (game.on) {
       const k = e.key.length > 1 ? e.key : e.key.toLowerCase();
       const m = { ArrowUp: [0,-1], w: [0,-1], ArrowDown: [0,1], s: [0,1], ArrowLeft: [-1,0], a: [-1,0], ArrowRight: [1,0], d: [1,0], 'ц': [0,-1], 'ы': [0,1], 'ф': [-1,0], 'в': [1,0] }[k]
@@ -470,20 +465,32 @@
       else if (game.dead) gStart();
       return;
     }
+
     if (e.target.id === 'kb' || e.ctrlKey || e.metaKey || e.altKey) return;
-    if (e.key === 'Enter') crumbleAll();
-    else if (e.key === 'Backspace') crumbleAll();
-    else if (e.key.length === 1) addChar(e.key.toUpperCase());
+
+    if (e.key === 'Enter') {
+      handleCommand(typedBuffer);
+    } else if (e.key === 'Backspace') {
+      backspaceChar();
+    } else if (e.key.length === 1) {
+      addChar(e.key.toUpperCase());
+    }
   });
 
-  /* ===== навигация и печать ===== */
   const kb = $('kb');
   $('sub').addEventListener('click', () => kb.focus());
-  kb.addEventListener('input', () => { for (const ch of kb.value) addChar(ch.toUpperCase()); kb.value = ''; });
-  kb.addEventListener('keydown', e => {
-    if (e.key === 'Enter') crumbleAll();
-    else if (e.key === 'Backspace') crumbleAll();
+  kb.addEventListener('input', () => {
+    for (const ch of kb.value) {
+      if (ch === '\n') handleCommand(typedBuffer);
+      else addChar(ch.toUpperCase());
+    }
+    kb.value = '';
   });
+  kb.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { handleCommand(typedBuffer); }
+    else if (e.key === 'Backspace') { backspaceChar(); }
+  });
+
   const nav = $('nav');
   LINKS.forEach(([n, u]) => {
     const a = document.createElement('a'); a.href = u; a.textContent = n;
@@ -494,13 +501,16 @@
     const b = document.createElement('button'); b.textContent = n; b.onclick = f; nav.append(b);
   });
 
+  // Эффект печати ника при входе
   const nm = $('name'), sub = $('sub'), sleep = ms => new Promise(r => setTimeout(r, ms));
   (async () => {
+    const targetName = 'daen141kk';
+    for (let k = 1; k <= targetName.length; k++) {
+      nm.textContent = targetName.slice(0, k);
+      await sleep(90);
+    }
+
     if (RM) { sub.textContent = PHRASES[0]; return; }
-    await Promise.race([document.fonts ? document.fonts.load('700 64px "JetBrains Mono"') : 0, sleep(500)]);
-    nm.parentElement.style.opacity = 0; introName();
-    await sleep(1900);
-    nm.parentElement.style.opacity = 1;
     for (let i = 0; ; i = (i + 1) % PHRASES.length) {
       const p = PHRASES[i];
       for (let k = 1; k <= p.length; k++) { sub.textContent = p.slice(0, k); await sleep(45); }
@@ -511,7 +521,6 @@
   })();
   if (!RM) setInterval(() => { document.title = document.title.endsWith('_') ? 'daen141kk' : 'daen141kk_'; }, 700);
 
-  /* ===== главный цикл ===== */
   resize();
   addEventListener('resize', resize);
   setTheme(store.get('theme') in THEMES ? store.get('theme') : 'mono');
@@ -539,8 +548,8 @@
       r.y += r.sp * dt / 1000;
       if (r.y - r.len * C > H) Object.assign(r, mkRain());
     }
-    updBlocks(dt, now);
-    if (!RM) { // параллакс фона
+    updChars(dt);
+    if (!RM) {
       const tx = ptr.active ? ptr.fx - .5 : tilt * .5, ty = ptr.active ? ptr.fy - .5 : 0;
       par.x += (tx - par.x) * .06; par.y += (ty - par.y) * .06;
       if (Math.abs(par.x - par.lx) + Math.abs(par.y - par.ly) > .002) {
@@ -565,7 +574,6 @@
     }
     ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
 
-    // след курсора из символов
     ctx.font = (C - 6) + 'px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     for (const t of trail) {
       ctx.fillStyle = t.color;
@@ -573,21 +581,20 @@
       ctx.globalAlpha = .95 * t.life; ctx.fillText(t.ch, t.x * C + C / 2, t.y * C + C / 2 + 1);
     }
     ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
-    // ползуны
     ctx.font = (C - 7) + 'px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     for (const c of crawlers) {
       const gl = glow(c.color);
       c.body.forEach((seg, i) => {
         const cx = seg.x * C + C / 2, cy = seg.y * C + C / 2;
-        if (i < 4) { // свечение вокруг головы
+        if (i < 4) {
           ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = .7 * (1 - i / 4);
           ctx.drawImage(gl, cx - C * 2, cy - C * 2);
           ctx.globalCompositeOperation = 'source-over';
         }
-        if (i === 0) { // голова: светлый блок с символом
+        if (i === 0) {
           ctx.globalAlpha = .95; ctx.fillStyle = c.color; ctx.fillRect(seg.x * C + 3, seg.y * C + 3, C - 6, C - 6);
           ctx.fillStyle = '#000'; ctx.globalAlpha = 1; ctx.fillText(seg.ch, cx, cy + 1);
-        } else { // хвост: мерцающая катакана, как в матрице
+        } else {
           if (Math.random() < .02) seg.ch = pick(KATA);
           ctx.fillStyle = c.color; ctx.globalAlpha = .12 + .7 * (1 - i / c.len);
           ctx.fillText(seg.ch, cx, cy + 1);
@@ -595,7 +602,7 @@
       });
     }
     ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
-    drawBlocks(now);
+    drawChars();
     if (game.on) drawGame(now);
     ctx.globalAlpha = 1;
     requestAnimationFrame(frame);
