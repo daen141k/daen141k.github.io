@@ -21,7 +21,7 @@
   --fg:#ffffff;
   --mut:rgba(255,255,255,.72);
   --violet:#9a9ab0;
-  --orange:#ff5a1f;
+  --orange:#5CCCCC;
   --green:#3ddc84;
   --ink:#0a0a0a;
   --gh:#ffffff;--gh-t:#0a0a0a;
@@ -46,8 +46,8 @@ img{max-width:100%}
 /* ---------- buttons ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:14px 24px;border-radius:999px;border:1px solid transparent;font:800 1rem var(--f-body);text-decoration:none;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s,color .2s}
 .btn:hover{transform:translateY(-2px)}
-.btn-primary{background:var(--orange);color:var(--ink);box-shadow:0 10px 30px rgba(255,90,31,.28)}
-.btn-primary:hover{box-shadow:0 14px 40px rgba(255,90,31,.5)}
+.btn-primary{background:var(--orange);color:var(--ink);box-shadow:0 10px 30px rgba(92,204,204,.28)}
+.btn-primary:hover{box-shadow:0 14px 40px rgba(92,204,204,.5)}
 .btn-ghost{background:rgba(24,24,32,.85);border-color:var(--line);color:var(--fg)}
 .btn-ghost:hover{background:rgba(48,48,62,.95)}
 .btn-dark{background:var(--ink);color:var(--fg)}
@@ -123,7 +123,7 @@ h1{margin:0 0 24px;font:900 clamp(2.1rem,5.4vw,4.8rem)/1 var(--f-display);letter
 /* ---------- projects ---------- */
 .projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
 .proj{position:relative;display:flex;flex-direction:column;gap:16px;min-height:270px;padding:26px;border-radius:28px;border:1px solid var(--line);background:linear-gradient(160deg,#16161f,#0a0a0f);text-decoration:none;color:inherit;overflow:hidden;min-width:0;transition:transform .25s,border-color .25s}
-.proj::after{content:"";position:absolute;right:-60px;top:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,90,31,.45),transparent 70%);opacity:0;transition:opacity .3s}
+.proj::after{content:"";position:absolute;right:-60px;top:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(92,204,204,.45),transparent 70%);opacity:0;transition:opacity .3s}
 .proj:hover{transform:translateY(-5px);border-color:var(--orange)}
 .proj:hover::after{opacity:1}
 .note{align-self:flex-start;padding:4px 10px;border-radius:999px;border:1px solid var(--orange);color:var(--orange);font:700 .68rem var(--f-mono);letter-spacing:.14em}
@@ -186,13 +186,13 @@ footer{padding-block:34px 48px;border-top:1px solid var(--line)}
 .btn-light:hover{box-shadow:0 12px 30px rgba(0,0,0,.35)}
 .nav-links button{background:none;border:0;padding:0;font:inherit;color:var(--mut);cursor:pointer;transition:color .2s}
 .nav-links button:hover{color:var(--fg)}
-.clock{display:flex;align-items:baseline;gap:1px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font:800 1.1rem/1 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--fg);box-shadow:0 0 0 3px rgba(255,90,31,.08)}
+.clock{display:flex;align-items:baseline;gap:1px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font:800 1.1rem/1 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--fg);box-shadow:0 0 0 3px rgba(92,204,204,.08)}
 .clock small{margin-left:7px;padding-left:7px;border-left:1px solid var(--line);font:700 .72rem var(--f-mono);color:var(--orange);min-width:2ch}
 .clk-c{font-style:normal;color:var(--orange);animation:blink 1s steps(2,start) infinite}
 @keyframes blink{to{opacity:.15}}
 .copy-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border:1px dashed var(--line);border-radius:999px;background:none;color:var(--mut);font:700 .7rem var(--f-mono);letter-spacing:.04em;cursor:pointer;transition:color .2s,border-color .2s,background .2s}
 .copy-chip::after{content:"⧉";color:var(--orange);font-size:.85rem}
-.copy-chip:hover{color:var(--fg);border-color:var(--orange);border-style:solid;background:rgba(255,90,31,.1)}
+.copy-chip:hover{color:var(--fg);border-color:var(--orange);border-style:solid;background:rgba(92,204,204,.1)}
 .copy-chip.done{color:var(--fg);border-color:var(--orange);border-style:solid}
 .copy-chip.done::after{content:"✓"}
 .rail{display:none;position:fixed;top:50%;transform:translateY(-50%);z-index:30;flex-direction:column;align-items:center;gap:12px}
@@ -236,7 +236,7 @@ footer{padding-block:34px 48px;border-top:1px solid var(--line)}
 .d-meta span{font:700 .68rem var(--f-mono);letter-spacing:.1em;color:var(--mut);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .d-row{display:flex;align-items:center;gap:8px}
 .d-row input{flex:1;min-width:40px;accent-color:var(--fg);cursor:pointer}
-:root[data-theme=light]{--bg:#f3f0ea;--panel:#ffffff;--line:rgba(0,0,0,.14);--fg:#0a0a0a;--mut:rgba(0,0,0,.66);--gh:#111111;--gh-t:#ffffff;color-scheme:light}
+:root[data-theme=light]{--orange:#27a0a0;--bg:#f3f0ea;--panel:#ffffff;--line:rgba(0,0,0,.14);--fg:#0a0a0a;--mut:rgba(0,0,0,.66);--gh:#111111;--gh-t:#ffffff;color-scheme:light}
 :root[data-theme=light] .btn-ghost,:root[data-theme=light] .chip,:root[data-theme=light] .cbtn{background:rgba(255,255,255,.85)}
 :root[data-theme=light] .btn-ghost:hover{background:#fff}
 :root[data-theme=light] .stats{background:rgba(255,255,255,.88)}
@@ -277,6 +277,16 @@ footer{padding-block:34px 48px;border-top:1px solid var(--line)}
 #rain{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:none}
 :root[data-bg=rain] #rain{display:block}
 :root[data-bg=rain] #wave{display:none}
+
+/* ---------- спиннер буферизации ---------- */
+.cbtn.play{position:relative}
+.dock-tab{position:relative}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dock.buf .cbtn.play svg{opacity:.2}
+.dock.buf .cbtn.play::after{content:"";position:absolute;inset:9px;border-radius:50%;border:3px solid transparent;border-top-color:var(--bg);border-right-color:var(--bg);animation:spin .75s linear infinite}
+.dock.buf .dock-tab::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:3px solid transparent;border-top-color:var(--orange);animation:spin .75s linear infinite}
+.dock.buf .dock-tab i{opacity:.35}
+@media (prefers-reduced-motion:reduce){.dock.buf .cbtn.play::after,.dock.buf .dock-tab::after{animation-duration:2s}}
 </style>
 </head>
 <body id="top">
@@ -371,6 +381,11 @@ footer{padding-block:34px 48px;border-top:1px solid var(--line)}
     <li><time>15.10.2026 · 19:40</time><span>добавил плеер</span></li>
     <li><time>16.10.2026 · 23:05</time><span>статус из Discord</span></li>
     <li><time>17.10.2026 · 18:30</time><span>светлая тема, виджеты</span></li>
+    <li><time>18.10.2026 · 21:20</time><span>новая аватарка</span></li>
+    <li><time>19.10.2026 · 18:05</time><span>новый заголовок: бог манипулятор анимепсих</span></li>
+    <li><time>21.10.2026 · 23:40</time><span>оставил одну цитату</span></li>
+    <li><time>22.10.2026 · 19:15</time><span>плеер v2: визуализатор, перемотка, shuffle, повтор</span></li>
+    <li><time>24.10.2026 · 20:30</time><span>голубой акцент, иероглифы на фоне, анимации при скролле</span></li>
     <li><time>скоро</time><span>проекты, мб что-то ещё</span></li>
   </ol>
 </section>
@@ -596,10 +611,11 @@ const TRACKS = [
   }
   function load(i, play) {
     cur = i; loaded = true; started = true; au.src = TRACKS[i].f; show(i); prog.style.width = "0%";
-    if (play) au.play().catch(() => {});
+    if (play) { setBuf(true); au.play().catch(() => setBuf(false)); }
   }
   function toggle() { started = true; if (!loaded) load(cur, true); else if (au.paused) au.play().catch(() => {}); else au.pause(); }
   const step = (d) => { let n = (cur + d + TRACKS.length) % TRACKS.length; if (shuf && d > 0 && TRACKS.length > 1) { do { n = Math.floor(Math.random() * TRACKS.length); } while (n === cur); } load(n, true); };
+  function setBuf(b) { dock.classList.toggle("buf", b); }
   function sync() { const on = !au.paused; dock.classList.toggle("on", on); playBtn.innerHTML = on ? I_PAUSE : I_PLAY; playBtn.setAttribute("aria-label", on ? "Пауза" : "Играть"); }
   // язычок: клик — открыть/закрыть, перетащить влево/вправо — прилипнет к краю экрана
   let sx = 0, down = false, moved = false, justDragged = false;
@@ -618,6 +634,8 @@ const TRACKS = [
   au.addEventListener("timeupdate", () => { if (au.duration) { const pc = (au.currentTime / au.duration) * 100; prog.style.width = pc + "%"; $("pBar").setAttribute("aria-valuenow", Math.round(pc)); } $("pCur").textContent = fmt(au.currentTime); });
   au.addEventListener("loadedmetadata", () => { $("pDur").textContent = fmt(au.duration); });
   au.addEventListener("play", () => { sync(); initAudio(); if (actx && actx.state === "suspended") actx.resume(); vizKick(); }); au.addEventListener("pause", sync);
+  ["loadstart", "waiting", "stalled"].forEach((ev) => au.addEventListener(ev, () => { if (!au.paused || ev === "loadstart") setBuf(true); }));
+  ["playing", "canplay", "pause", "error", "ended", "emptied"].forEach((ev) => au.addEventListener(ev, () => setBuf(false)));
   au.addEventListener("ended", () => { if (rep) { au.currentTime = 0; au.play().catch(() => {}); } else step(1); });
   au.addEventListener("error", () => { if (loaded) toast("Нет файла " + TRACKS[cur].f + ": папка music должна лежать рядом с index.html"); });
   if ("mediaSession" in navigator) {
@@ -689,7 +707,7 @@ const TRACKS = [
       if (vReduce) lv[i] = playing ? 0.35 : 0.04;
       mx = Math.max(mx, lv[i]);
       const bh = Math.max(3, lv[i] * H), x = i * (bw + gap), y = (H - bh) / 2;
-      vx.fillStyle = "rgba(255," + Math.round(90 + 90 * lv[i]) + ",31," + (0.45 + 0.55 * lv[i]).toFixed(2) + ")";
+      vx.fillStyle = "rgba(" + Math.round(92 + 90 * lv[i]) + ",204,204," + (0.45 + 0.55 * lv[i]).toFixed(2) + ")";
       vx.beginPath();
       if (vx.roundRect) vx.roundRect(x, y, bw, bh, Math.min(bw / 2, 3)); else vx.rect(x, y, bw, bh);
       vx.fill();
@@ -818,8 +836,8 @@ const TRACKS = [
     cols = w < 620 ? 36 : 64;
     const L = document.documentElement.dataset.theme === "light";
     bg = ctx.createLinearGradient(0, 0, 0, h);
-    bg.addColorStop(0, L ? "#f2e8df" : "#1c0e08");
-    bg.addColorStop(0.45, L ? "#f3efe9" : "#120a06");
+    bg.addColorStop(0, L ? "#e3f1f0" : "#0b1a1d");
+    bg.addColorStop(0.45, L ? "#f3efe9" : "#08131a");
     bg.addColorStop(1, L ? "#f3f0ea" : "#08080b");
     // всё, что не меняется между кадрами, считаем один раз
     const hy = h * 0.34, by = h * 1.02;
@@ -837,7 +855,7 @@ const TRACKS = [
         lw1: 0.8 + 1.3 * z,
         c1: (L ? "rgba(70,70,90," : "rgba(190,190,210,") + (0.3 + 0.6 * z).toFixed(2) + ")",
         lw2: 1.1 + 1.6 * z,
-        c2: "rgba(255," + Math.round(120 + 60 * (1 - z)) + ",30," + (0.5 + 0.5 * z).toFixed(2) + ")",
+        c2: "rgba(" + Math.round(92 + 50 * (1 - z)) + ",204,204," + (0.5 + 0.5 * z).toFixed(2) + ")",
         v: new Float32Array(cols + 1)
       });
     }
@@ -927,12 +945,12 @@ const TRACKS = [
     const rows = Math.ceil(h / fs);
     drops = []; spd = []; acc = [];
     for (let c = 0; c < cols; c++) { drops.push(Math.floor(Math.random() * rows * 1.4) - 4); spd.push(0.22 + Math.random() * 0.5); acc.push(Math.random()); }
-    ctx.fillStyle = light ? "#f3efe9" : "#0a0608"; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = light ? "#f3f0ea" : "#060b0e"; ctx.fillRect(0, 0, w, h);
     ctx.font = "700 " + fs + "px 'Noto Sans JP','Yu Gothic','Hiragino Sans',sans-serif"; ctx.textBaseline = "top";
     for (let i = 0; i < 70; i++) step();      // прогрев, чтобы сразу были шлейфы
   }
   function step() {
-    ctx.fillStyle = light ? "rgba(243,239,233,.16)" : "rgba(10,6,8,.14)";
+    ctx.fillStyle = light ? "rgba(243,240,234,.16)" : "rgba(6,11,14,.14)";
     ctx.fillRect(0, 0, w, h);
     const rows = Math.ceil(h / fs);
     for (let c = 0; c < cols; c++) {
@@ -942,7 +960,7 @@ const TRACKS = [
       const y = drops[c];
       if (y >= 0 && y <= rows) {
         const bright = Math.random() < 0.07;
-        ctx.fillStyle = bright ? (light ? "#ff5a1f" : "#ffd9d2") : (light ? "rgba(170,30,30,.55)" : "rgba(255,58,46,.62)");
+        ctx.fillStyle = bright ? (light ? "#2fb5b5" : "#e4fbfb") : (light ? "rgba(40,150,150,.5)" : "rgba(92,204,204,.62)");
         ctx.fillText(GL[(Math.random() * GL.length) | 0], c * fs, y * fs);
       }
       drops[c] = y > rows && Math.random() > 0.965 ? -Math.floor(Math.random() * 14) : y + 1;
