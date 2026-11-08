@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://daen141k.github.io/daen141kkbio/sitemap.xml
